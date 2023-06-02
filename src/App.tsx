@@ -2,11 +2,25 @@ import { useEffect, useState } from "react";
 import "./app.css";
 import arrowRightIcon from "./assets/svg/icon-arrow.svg";
 
-import styled from "styled-components";
 import axios from "axios";
-import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
+import { MapContainer, TileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-interface IDataFound {
+import { MapMarker } from "./components/MapMarker";
+import {
+  ItemTextStrong,
+  ItemTitles,
+  MainBackground,
+  Position,
+  ResultItems,
+  SeacrhIcon,
+  SearchGroup,
+  SearchInput,
+  StyledDivChecker,
+  StyledResultDiv,
+  Title,
+  Wrapper,
+} from "./components/StyledComponent";
+export interface IDataFound {
   ip: string;
   location: {
     country: string;
@@ -18,120 +32,22 @@ interface IDataFound {
   isp: string;
 }
 
-const Wrapper = styled.section`
-  position: relative;
-`;
-
-const StyledDivChecker = styled.div`
-  position: relative;
-`;
-
-const MainBackground = styled.div`
-  width: 100%;
-  height: 250px;
-  z-index: 1;
-  @media only screen and (max-width: 375px) {
-    height: 300px;
-  }
-`;
-
-const Title = styled.h1`
-  color: #fff;
-  padding: 24px;
-  text-align: center;
-`;
-
-const SearchGroup = styled.div`
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const SearchInput = styled.input`
-  padding: 14px;
-  border-radius: 8px;
-  border: none;
-  outline: none;
-  width: 300px;
-`;
-
-const SeacrhIcon = styled.div`
-  background: #000;
-  width: 40px;
-  height: 44px;
-  border-bottom-right-radius: 8px;
-  border-top-right-radius: 8px;
-  margin-left: -40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-`;
-
-const StyledResultDiv = styled.div`
-  display: flex;
-  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-  justify-content: space-around;
-  position: absolute;
-  width: 80%;
-  left: 50%;
-  transform: translateX(-50%);
-  top: 70%;
-  z-index: 9999;
-  background: #fff;
-  border-radius: 8px;
-  padding: 20px;
-  gap: 50px;
-
-  @media only screen and (max-width: 375px) {
-    flex-direction: column;
-    gap: 10px;
-    top: 50%;
-  }
-`;
-
-const Position = styled.div`
-  position: absolute;
-  height: 75vh;
-  width: 100%;
-  z-index: -1;
-  overflow: hidden;
-`;
-
-const ResultItems = styled.div`
-  width: 25%;
-  height: 100px;
-
-  &:not(:last-child) {
-    border-right: 1px solid #ccc;
-  }
-
-  @media only screen and (max-width: 375px) {
-    width: 100%;
-    height: 80px;
-    border: none;
-    text-align: center;
-    &:not(:last-child) {
-      border: none;
-    }
-  }
-`;
-
-const ItemTitles = styled.p`
-  color: #ccc;
-  text-transform: uppercase;
-  margin-bottom: 16px;
-`;
-
-const ItemTextStrong = styled.strong`
-  font-size: 24px;
-`;
+const initialDataFound: IDataFound = {
+  ip: "",
+  location: {
+    country: "",
+    region: "",
+    timezone: "",
+    lat: 0,
+    lng: 0,
+  },
+  isp: "",
+};
 
 const App = () => {
   const [ipAddress, setIpAddress] = useState<string>("");
   const [text, setText] = useState<string>("");
-  const [dataFound, setDataFound] = useState<IDataFound>();
+  const [dataFound, setDataFound] = useState<IDataFound>(initialDataFound);
 
   useEffect(() => {
     const addressChecker = async () => {
@@ -157,21 +73,6 @@ const App = () => {
     if (event.key === "Enter") {
       handleSearch();
     }
-  };
-
-  const MapMarker = () => {
-    const map = useMap();
-    if (dataFound?.location.lat && dataFound?.location.lng) {
-      map.setView([dataFound?.location.lat, dataFound?.location.lng], 13);
-      return (
-        <Marker position={[dataFound?.location.lat, dataFound?.location.lng]}>
-          <Popup>
-            {dataFound?.location.region}, {dataFound?.location.country}
-          </Popup>
-        </Marker>
-      );
-    }
-    return null;
   };
 
   return (
@@ -223,7 +124,7 @@ const App = () => {
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               attribution='Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
             />
-            <MapMarker />
+            <MapMarker data={dataFound} />
           </MapContainer>
         </Position>
       </StyledDivChecker>
