@@ -44,7 +44,7 @@ const AddressChecker = () => {
   };
 
   useEffect(() => {
-    const addressChecker = async () => {
+    const fetchData = async () => {
       if (isValidIpAddress(ipAddress)) {
         try {
           const data = await getDataCheckerIP(ipAddress);
@@ -69,29 +69,8 @@ const AddressChecker = () => {
       }
     };
 
-    const addressTracker = async () => {
-      if (isValidIpAddress(ipAddress)) {
-        try {
-          const data = await getDataCheckerDomain(ipAddress);
-          setDataFound(data.data);
-          setErrorMessage("");
-        } catch (error: any) {
-          console.log(error);
-        }
-      } else if (isDomainName(ipAddress)) {
-        try {
-          const data = await getDataCheckerDomain(ipAddress);
-          setDataFound(data.data);
-          setErrorMessage("");
-        } catch (error: any) {
-          console.log(error);
-        }
-      }
-    };
-
     if (ipAddress) {
-      addressChecker();
-      addressTracker();
+      fetchData();
     }
   }, [ipAddress]);
 
