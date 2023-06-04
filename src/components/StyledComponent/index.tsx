@@ -12,7 +12,7 @@ const MainBackground = styled.div`
   width: 100%;
   height: 250px;
   z-index: 1;
-  @media only screen and (max-width: 375px) {
+  @media only screen and (min-width: 320px) and (max-width: 598px) {
     height: 300px;
   }
 `;
@@ -28,6 +28,7 @@ const SearchGroup = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-bottom: 16px;
 `;
 
 const SearchInput = styled.input`
@@ -35,7 +36,11 @@ const SearchInput = styled.input`
   border-radius: 8px;
   border: none;
   outline: none;
-  width: 300px;
+  width: 400px;
+
+  @media only screen and (min-width: 320px) and (max-width: 598px) {
+    max-width: 300px;
+  }
 `;
 
 const SeacrhIcon = styled.div`
@@ -66,7 +71,7 @@ const StyledResultDiv = styled.div`
   padding: 20px;
   gap: 50px;
 
-  @media only screen and (max-width: 375px) {
+  @media only screen and (min-width: 320px) and (max-width: 598px) {
     flex-direction: column;
     gap: 10px;
     top: 50%;
@@ -84,16 +89,18 @@ const Position = styled.div`
 const ResultItems = styled.div`
   width: 25%;
   height: 100px;
+  padding-left: 20px;
 
   &:not(:last-child) {
     border-right: 1px solid #ccc;
   }
 
-  @media only screen and (max-width: 375px) {
+  @media only screen and (min-width: 320px) and (max-width: 598px) {
     width: 100%;
     height: 80px;
     border: none;
     text-align: center;
+    padding-left: 0;
     &:not(:last-child) {
       border: none;
     }
@@ -110,6 +117,12 @@ const ItemTextStrong = styled.strong`
   font-size: 24px;
 `;
 
+const ErrorText = styled.p`
+  text-align: center;
+  color: #bf233a;
+  font-weight: bold;
+`;
+
 export {
   Wrapper,
   ItemTitles,
@@ -123,4 +136,5 @@ export {
   ResultItems,
   StyledResultDiv,
   ItemTextStrong,
+  ErrorText,
 };
