@@ -1,8 +1,8 @@
 import { Marker, Popup, useMap } from "react-leaflet";
-import { IDataFound } from "../../App";
+import { IIpifyResponse } from "~/utils/types";
 
 interface Props {
-  data: IDataFound;
+  data: IIpifyResponse;
 }
 
 export const MapMarker: React.FC<Props> = ({ data }) => {

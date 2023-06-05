@@ -1,4 +1,4 @@
-export interface IDataFound {
+export interface IIpifyResponse {
   ip: string;
   location: {
     country: string;

@@ -5,6 +5,7 @@ import { MapContainer, TileLayer } from "react-leaflet";
 
 import {
   ErrorText,
+  ImageSVG,
   ItemTextStrong,
   ItemTitles,
   MainBackground,
@@ -18,21 +19,33 @@ import {
   Title,
   Wrapper,
 } from "../StyledComponent";
-import "@/app.css";
-import arrowRightIcon from "@/assets/svg/icon-arrow.svg";
+import "~/app.css";
+import arrowRightIcon from "~/assets/svg/icon-arrow.svg";
 import { MapMarker } from "../MapMarker";
-import { getDataCheckerDomain, getDataCheckerIP } from "../../api/ipChecker";
-import { IDataFound } from "../../utils/type";
-import { initialDataFound } from "../../utils/constant";
-import { isDomainName, isValidIpAddress } from "../../utils/validation";
+import { getDataCheckerDomain, getDataCheckerIP } from "~/apis/ipChecker";
+import { IIpifyResponse } from "~/utils/types";
+import { isDomainName, isValidIpAddress } from "~/utils/validations";
+
+// eslint-disable-next-line react-refresh/only-export-components
+export const initialIpifyPResponse: IIpifyResponse = {
+  ip: "",
+  location: {
+    country: "",
+    region: "",
+    timezone: "",
+    lat: 0,
+    lng: 0,
+  },
+  isp: "",
+};
 
 const AddressChecker = () => {
   const [ipAddress, setIpAddress] = useState<string>("");
   const [text, setText] = useState<string>("");
-  const [dataFound, setDataFound] = useState<IDataFound>(initialDataFound);
+  const [dataList, setDataList] = useState<IIpifyResponse>(
+    initialIpifyPResponse
+  );
   const [errorMessage, setErrorMessage] = useState<string>("");
-
-  console.log(dataFound);
 
   const handleSearch = () => {
     if (text.trim() === "") {
@@ -48,18 +61,17 @@ const AddressChecker = () => {
       if (isValidIpAddress(ipAddress)) {
         try {
           const data = await getDataCheckerIP(ipAddress);
-          setDataFound(data.data);
+          setDataList(data.data);
           setErrorMessage("");
         } catch (error: any) {
           if (error.response.status === 422) {
             setErrorMessage("Input correct IPv4 or IPv6 address.");
           }
-          console.log(error);
         }
       } else if (isDomainName(ipAddress)) {
         try {
           const data = await getDataCheckerDomain(ipAddress);
-          setDataFound(data.data);
+          setDataList(data.data);
           setErrorMessage("");
         } catch (error: any) {
           console.log(error);
@@ -96,14 +108,7 @@ const AddressChecker = () => {
               onKeyDown={handleKeyDown}
             />
             <SeacrhIcon onClick={handleSearch}>
-              <img
-                style={{
-                  height: "15px",
-                  width: "15px",
-                }}
-                src={arrowRightIcon}
-                alt=""
-              />
+              <ImageSVG src={arrowRightIcon} alt="" />
             </SeacrhIcon>
           </SearchGroup>
           {errorMessage && <ErrorText>*{errorMessage}</ErrorText>}
@@ -111,27 +116,27 @@ const AddressChecker = () => {
         <StyledResultDiv>
           <ResultItems>
             <ItemTitles>IP Address</ItemTitles>
-            <ItemTextStrong>{dataFound?.ip || ""}</ItemTextStrong>
+            <ItemTextStrong>{dataList?.ip || ""}</ItemTextStrong>
           </ResultItems>
           <ResultItems>
             <ItemTitles>Location</ItemTitles>
             <ItemTextStrong>
-              {dataFound &&
-                `${dataFound?.location.region}${
-                  dataFound?.location.region && ", "
-                }${dataFound?.location.country}`}
+              {dataList &&
+                `${dataList?.location.region}${
+                  dataList?.location.region && ", "
+                }${dataList?.location.country}`}
             </ItemTextStrong>
           </ResultItems>
           <ResultItems>
             <ItemTitles>Timezone</ItemTitles>
             <ItemTextStrong>
-              {dataFound?.location.timezone &&
-                `UCL ${dataFound.location.timezone}`}
+              {dataList?.location.timezone &&
+                `UCL ${dataList.location.timezone}`}
             </ItemTextStrong>
           </ResultItems>
           <ResultItems>
             <ItemTitles>ISP</ItemTitles>
-            <ItemTextStrong>{dataFound?.isp}</ItemTextStrong>
+            <ItemTextStrong>{dataList?.isp}</ItemTextStrong>
           </ResultItems>
         </StyledResultDiv>
         <Position>
@@ -140,7 +145,7 @@ const AddressChecker = () => {
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               attribution='Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
             />
-            <MapMarker data={dataFound} />
+            <MapMarker data={dataList} />
           </MapContainer>
         </Position>
       </StyledDivChecker>

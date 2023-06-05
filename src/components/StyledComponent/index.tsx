@@ -76,6 +76,16 @@ const StyledResultDiv = styled.div`
     gap: 10px;
     top: 50%;
   }
+
+  @media only screen and (min-width: 768px) and (max-width: 1023px) {
+    padding-left: 0;
+    gap: 0;
+  }
+`;
+
+const ImageSVG = styled.img`
+    height: "15px",
+    width: "15px"
 `;
 
 const Position = styled.div`
@@ -90,6 +100,8 @@ const ResultItems = styled.div`
   width: 25%;
   height: 100px;
   padding-left: 20px;
+  word-break: break-all;
+  overflow-wrap: break-word;
 
   &:not(:last-child) {
     border-right: 1px solid #ccc;
@@ -104,6 +116,11 @@ const ResultItems = styled.div`
     &:not(:last-child) {
       border: none;
     }
+  }
+
+  @media only screen and (min-width: 768px) and (max-width: 1023px) {
+    padding-left: 0;
+    padding: 0 20px;
   }
 `;
 
@@ -132,6 +149,7 @@ export {
   SearchGroup,
   SearchInput,
   SeacrhIcon,
+  ImageSVG,
   Position,
   ResultItems,
   StyledResultDiv,
